@@ -10,6 +10,7 @@ black = "*"
 ipdb = "*"
 
 [packages]
+click = "*"
 
 [pipenv]
 allow_prereleases = true
