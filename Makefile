@@ -4,4 +4,4 @@ install:
 	&& pip install -r requirements.txt
 
 test:
-	python -m pytest -svv --cov=cli --cov-report term-missing
+	python -m pytest -svv --cov=src --cov-report term-missing
