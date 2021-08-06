@@ -11,6 +11,7 @@ ipdb = "*"
 
 [packages]
 click = "*"
+pandas = "*"
 
 [pipenv]
 allow_prereleases = true
