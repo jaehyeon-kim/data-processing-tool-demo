@@ -1,9 +1,16 @@
 #!/usr/bin/env python
 import click
 import glob
+import src
 
 
-@click.command()
+@click.version_option(src.__version__)
+@click.group()
+def cli():
+    """Data Processing Tool"""
+
+
+@click.command("search")
 @click.option(
     "--path",
     prompt="Path to search for csv files",
@@ -19,4 +26,4 @@ def search(path, ftype):
 
 
 if __name__ == "__main__":
-    search()
+    cli()
