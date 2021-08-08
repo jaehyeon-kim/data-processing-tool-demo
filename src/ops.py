@@ -25,7 +25,7 @@ class Operation:
         except FileNotFoundError as e:
             raise OperationError(f"File not found - {filepath}") from e
         except ParserError as e:
-            raise OperationError("error") from e
+            raise OperationError(f"Fails to parse file - {e}") from e
 
     def group_by(self, group_by_col):
         """Group by a data frame"""
@@ -51,11 +51,3 @@ class Operation:
             return self
         except TypeError as e:
             raise OperationError(e) from e
-
-    def operate(self, filepath, group_by_col, apply_col, func_name):
-        """Apply group by opperation"""
-        try:
-            self.read_csv(filepath).group_by(group_by_col).select_column(apply_col).apply(func_name)
-            return self.df
-        except OperationError as e:
-            print(e)
