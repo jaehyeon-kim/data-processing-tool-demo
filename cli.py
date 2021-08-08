@@ -1,28 +1,45 @@
 #!/usr/bin/env python
 import click
 import glob
-import src
+
+from src import __version__, ops, utils
 
 
-@click.version_option(src.__version__)
+@click.version_option(__version__)
 @click.group()
 def cli():
     """Data Processing Tool"""
 
 
-@click.command("search")
+@cli.command("process")
+@click.option("--filepath", prompt="Path to a csv file", help="Path to a csv file")
+@click.option("--group_by_col", prompt="Column name to group", help="Column name to group")
 @click.option(
-    "--path",
-    prompt="Path to search for csv files",
-    help="This is the path to search for files: /tmp",
+    "--apply_col", prompt="Column name to apply a function", help="Column name to apply a function"
 )
-@click.option("--ftype", prompt="Pass in the type of file", help="Pass in the file type: e.g csv")
-def search(path, ftype):
-    """This is a tool that search for files given path and file type"""
-    results = glob.glob(f"{path}/*.{ftype}")
-    click.echo(click.style("Found Matches:", fg="red"))
-    for result in results:
-        click.echo(click.style(f"{result}", bg="blue", fg="white"))
+@click.option("--func_name", prompt="Function name", help="Function name")
+def process(filepath, group_by_col, apply_col, func_name):
+    click.echo(
+        f"Processing csv file: {filepath}, group by {group_by_col}, apply on {apply_col}, function {func_name}"
+    )
+    try:
+        oper = (
+            ops.Operation()
+            .read_csv(filepath)
+            .group_by(group_by_col)
+            .select_column(apply_col)
+            .apply(func_name)
+        )
+        click.echo(oper.df)
+    except ops.OperationError as e:
+        click.echo(click.style(e, fg="red"))
+
+
+@cli.command("list")
+def listfuncs():
+    funcs = utils.get_func_names()
+    names = ", ".join(funcs)
+    click.echo(f"Available functions: {names}")
 
 
 if __name__ == "__main__":
